@@ -43,6 +43,12 @@ Help Launchpad by creating more pads! Examples of the pads are available
 
 [![Launchpad screenshot](screenshot.png)](https://launchpad.graphql.com/1jzxrj179)
 
+## Architecture
+
+For an overview of how Apollo Launchpad is built, check out the [post detailing the original effort](https://dev-blog.apollodata.com/introducing-launchpad-the-graphql-server-demo-platform-cc4e7481fcba). This is a visualization of that effort:
+
+![Launchpad Architecture](./docs/img/architecture.png)
+
 ## Development
 
 ### Running the frontend code
@@ -60,12 +66,12 @@ For running against staging server, the config should be like following (you
 can also copy `.env.staging.template` to your `.env`):
 
 ```
-REACT_APP_LAUNCHPAD_API_URL=https://launchpad-staging-api.herokuapp.com/
+REACT_APP_LAUNCHPAD_API_URL=https://launchpad-api-staged.herokuapp.com/
 REACT_APP_AUTH0_DOMAIN=meteor.auth0.com
 REACT_APP_AUTH0_CLIENT_ID=kUtxJjyapGN72Rs7tt5jXMgQ7axDgJLa
 ```
 
-Then local server can be run:
+Then the client can be run locally:
 
 ```
 npm install # npm 5 recommended
@@ -76,35 +82,47 @@ To test:
 
 ```
 npm install
-npm run check
+npm test
 ```
 
 Limitation - currently logs are not accessible on staging (or by running single
 tenant server yourself).
 
-### Running the server
+### Using a local server
 
-Running the server is more complicated. You need MongoDB, Auth0 account and
-Auth0 Extend account (currently it requires enterprise account). Once you get
+Running the server is more complicated. You need [MongoDB](https://docs.mongodb.com/manual/administration/install-community/), [Auth0 account](https://auth0.com/signup) and
+[Auth0 Extend account](https://auth0.com/extend) (currently it requires enterprise account). Once you get
 those, you can set the server and client up with the following `.env` file.
 
 ```
-REACT_APP_LAUNCHPAD_API_URL=localhost:8080
+REACT_APP_LAUNCHPAD_API_URL=http://localhost:8000
 REACT_APP_AUTH0_DOMAIN={YOUR AUTH0 DOMAIN}
 REACT_APP_AUTH0_CLIENT_ID={YOUR AUTH0 CLIENTID}
 WT_TOKEN={YOUR MASTER AUTH0 EXTEND TOKEN}
-WT_API={YOUR AUTH0 EXTEND OR WEBTAKS API URL}
+WT_API={YOUR AUTH0 EXTEND OR OTHER WEBTASK PROVIDER API URL}
 WT_SINGLE_TENANT_CONTAINER={Container name if running single tenant webtask/extend}
 WT_NO_PROXY=true
 MONGODB_URL={YOUR MONGODB URL}
 AUTH0_SECRET={YOUR AUTH0 SECRET}
 ```
 
-Running against staging webtask service, you don't need your own webtask account
-then.
+To obtain an Auth0 client id, you must create an application. Inside of that application, found under [Auth0 clients](https://manage.auth0.com/#/clients), make sure that you have added http://localhost:3000 to your Allowed Origins(CORS), shown below. This ensures that your browser will accept the response from Auth0's servers that indicates a user is logged in.
+
+![Adding CORS](./docs/img/cors.png)
+
+Then you can run server
 
 ```
-REACT_APP_LAUNCHPAD_API_URL=localhost:8080
+npm install
+npm run dev-server
+```
+
+### Using the staging webtask
+
+Running against staging webtask service, so you don't need your own webtask or Auth0 Extend account.
+
+```
+REACT_APP_LAUNCHPAD_API_URL=http://localhost:8000
 REACT_APP_AUTH0_DOMAIN={YOUR AUTH0 DOMAIN}
 REACT_APP_AUTH0_CLIENT_ID={YOUR AUTH0 CLIENTID}
 MONGODB_URL={YOUR MONGODB URL}
@@ -113,7 +131,6 @@ WT_SINGLE_TENANT_CONTAINER=launchpad-staging
 WT_NO_PROXY=true
 WT_TOKEN=eyJhbGciOiJIUzI1NiIsImtpZCI6ImxhdW5jaHBhZC0xIn0.eyJqdGkiOiJiOGQ4OWE2OWUxN2Y0NWNhODIxM2M4ZGVjZDVlYjY4MyIsImlhdCI6MTQ5NzYwMjk0NiwiY2EiOlsiZmYxNDczNDYzNzY5NDNmMWEwN2JkMmQyNDkyYmUzZTkiXSwiZGQiOjIsInRlbiI6ImxhdW5jaHBhZC1zdGFnaW5nIn0.jT31-pdmCG8QyrZnwMYO5Mgi6GUe5D9tfTFT8X1XiBw
 WT_API=https://wt-launchpad.it.auth0.com/api
-WT_NO_PROXY=true
 ```
 
 Then you can run server
