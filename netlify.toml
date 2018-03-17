@@ -4,11 +4,11 @@
   REACT_APP_AUTH0_CLIENT_ID="V84GiB4Ltbh6_5m7k-4lA2kD7mrD-mBh"
 
 [context.deploy-preview.environment]
-  REACT_APP_LAUNCHPAD_API_URL = "https://launchpad-staging-api.herokuapp.com/"
+  REACT_APP_LAUNCHPAD_API_URL = "https://launchpad-api-staged.herokuapp.com/"
   REACT_APP_AUTH0_DOMAIN = "meteor.auth0.com"
   REACT_APP_AUTH0_CLIENT_ID = "kUtxJjyapGN72Rs7tt5jXMgQ7axDgJLa"
 
 [context.branch-deploy.environment]
-  REACT_APP_LAUNCHPAD_API_URL = "https://launchpad-staging-api.herokuapp.com/"
+  REACT_APP_LAUNCHPAD_API_URL = "https://launchpad-api-staged.herokuapp.com/"
   REACT_APP_AUTH0_DOMAIN = "meteor.auth0.com"
   REACT_APP_AUTH0_CLIENT_ID = "kUtxJjyapGN72Rs7tt5jXMgQ7axDgJLa"
