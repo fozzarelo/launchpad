@@ -19,15 +19,19 @@ const CORE_DEPENDENCIES = [
   },
   {
     name: 'apollo-tracing',
-    version: '0.1.1',
+    version: '0.1.3',
+  },
+  {
+    name: 'apollo-cache-control',
+    version: '0.0.9',
   },
   {
     name: 'graphql-extensions',
-    version: '0.0.5',
+    version: '0.0.8',
   },
   {
     name: 'apollo-engine',
-    version: '0.5.2',
+    version: '1.0.4-evans.0',
   },
   {
     name: 'express',

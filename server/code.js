@@ -73,12 +73,14 @@ export const RUNNER_WRAPPER = (code: string) =>
 
     var graphql = require('graphql');
     var GraphQLExtensions = require('graphql-extensions')
-    var Engine = require('apollo-engine').Engine;
+    var ApolloEngine = require('apollo-engine').ApolloEngine;
     var express = require('express');
     var Webtask = require('webtask-tools');
     var bodyParser = require('body-parser');
     var graphqlHTTP = require('express-graphql');
     var Tracing = require('apollo-tracing');
+    var CacheControlExtension = require('apollo-cache-control').CacheControlExtension;
+    var request = require('request');
 
     var server;
     var engine;
@@ -129,33 +131,26 @@ export const RUNNER_WRAPPER = (code: string) =>
 
     process.env["GOMAXPROCS"] = "1"
 
+    var extensionStack = new GraphQLExtensions.GraphQLExtensionStack([
+      Tracing.TracingExtension,
+      CacheControlExtension,
+    ])
+
     if (!server) {
       server = express();
       server.use(
         '/',
         (req, res, next) => {
-          req.userContext = JSON.parse(
-            req.webtaskContext.secrets.userContext
-          ).reduce(function(acc, next) {
-            acc[next.key] = next.value;
-            return acc;
-          }, {});
+          req.userContext = req.headers['usercontext']
           if (!schema) {
             schema = schemaFunction(req.userContext);
           }
           next();
         },
-        (req, res, next) => {
-          if (engine) {
-            engine.expressMiddleware()(req, res, next);
-          } else {
-            next();
-          }
-        },
         bodyParser.json(),
         (req, res, next) => {
-          req._traceCollector = new Tracing.TracingExtension();
-          req._traceCollector.requestDidStart();
+          extensionStack.requestDidStart();
+          extensionStack.executionDidStart();
           next();
         },
         graphqlHTTP(req =>
@@ -168,22 +163,21 @@ export const RUNNER_WRAPPER = (code: string) =>
             context: Object.assign({},
               results[1],
               {
-                _extensionStack: new GraphQLExtensions.GraphQLExtensionStack([req._traceCollector]),
+                _extensionStack: extensionStack,
               }
             ),
             root: results[2],
             extensions: () => {
-              req._traceCollector.requestDidEnd();
-              const tracing = req._traceCollector.format();
-              const result = {};
-              result[tracing[0]] = tracing[1];
-              return result;
+              extensionStack.executionDidEnd();
+              extensionStack.requestDidEnd();
+              return extensionStack.format();
             }
           }))
         )
       );
     }
 
+    var proxyExpress = express();
     var webtask = Webtask.fromExpress(server);
 
     module.exports = function (context, req, res) {
@@ -194,27 +188,48 @@ export const RUNNER_WRAPPER = (code: string) =>
         return acc;
       }, {});
 
-      if (!engine && req.userContext.APOLLO_ENGINE_KEY) {
-        engine = new Engine({
-          endpoint: '/',
-          engineConfig: {
+      if (req.userContext.APOLLO_ENGINE_KEY) {
+        if(!global.engine) {
+          global.engine = new ApolloEngine({
             apiKey: req.userContext.APOLLO_ENGINE_KEY,
-            reporting: {
-              debugReports: true
-            },
-            origins: [
-              {
-                http: {
-                  url: context.secrets.url,
-                },
-              },
-            ],
-          },
-        });
-        engine.start();
-      }
+          });
 
-      webtask(context, req, res);
+          global.engine.listen({
+            graphqlPaths: ['/'],
+            expressApp: server,
+            port: 3000,
+            innerHost: '127.0.0.1'
+          }, () => {
+            proxyExpress.use((req, res, next) => {
+              req.pipe(process.stdout);
+
+              var proxyRes = req.pipe(request({
+                uri: global.engine.engineListeningAddress.url,
+                forever: true,
+                headers: {
+                  'usercontext': JSON.stringify(req.userContext),
+                  'host': req.headers['host'],
+                },
+              }))
+                .on('error', (err) => {
+                  console.error(err);
+                  res.writeHead(503);
+                  res.end();
+                });
+
+              proxyRes.pipe(process.stdout);
+              proxyRes.pipe(res);
+            });
+
+            webtask = Webtask.fromExpress(proxyExpress);
+            webtask(context, req, res);
+          });
+        } else {
+          webtask(context, req, res);
+        }
+      } else {
+        webtask(context, req, res);
+      }
     }
   })();
 `;
