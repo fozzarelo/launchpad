@@ -65,21 +65,25 @@ export const RUNNER_WRAPPER = (code: string) =>
 
   (function() {
     if (__LAUNCHPAD__runtimeError) {
-      module.exports = function (context, callback) {
+      module.exports = function webtask(context, callback) {
         callback(__LAUNCHPAD__runtimeError);
       };
       return;
     }
 
     var graphql = require('graphql');
+    var GraphQLExtensions = require('graphql-extensions')
     var ApolloEngine = require('apollo-engine').ApolloEngine;
     var express = require('express');
     var Webtask = require('webtask-tools');
     var bodyParser = require('body-parser');
-    var graphqlExpress = require('launchpad-module').apolloServerExpress.graphqlExpress;
-
+    var graphqlHTTP = require('express-graphql');
+    var Tracing = require('apollo-tracing');
+    var CacheControlExtension = require('apollo-cache-control').CacheControlExtension;
     var request = require('request');
 
+    var server;
+    var engine;
 
     var schemaFunction =
       exports.schemaFunction ||
@@ -127,9 +131,14 @@ export const RUNNER_WRAPPER = (code: string) =>
 
     process.env["GOMAXPROCS"] = "1"
 
-    if (!global.__server) {
-      global.__server = express();
-      global.__server.use(
+    var extensionStack = new GraphQLExtensions.GraphQLExtensionStack([
+      Tracing.TracingExtension,
+      CacheControlExtension,
+    ])
+
+    if (!server) {
+      server = express();
+      server.use(
         '/',
         (req, res, next) => {
           req.userContext = req.headers['usercontext']
@@ -140,22 +149,36 @@ export const RUNNER_WRAPPER = (code: string) =>
         },
         bodyParser.json(),
         (req, res, next) => {
-          graphqlExpress({
-            schema: schema,
-            tracing: true,
-            cacheControl: true,
-          })(req, res, next)
-        }
+          extensionStack.requestDidStart();
+          extensionStack.executionDidStart();
+          next();
+        },
+        graphqlHTTP(req =>
+          Promise.all([
+            Promise.resolve(schema),
+            Promise.resolve(contextFn(req.headers, req.userContext)),
+            Promise.resolve(rootFunction(req.headers, req.userContext))
+          ]).then((results) => ({
+            schema: GraphQLExtensions.enableGraphQLExtensions(results[0]),
+            context: Object.assign({},
+              results[1],
+              {
+                _extensionStack: extensionStack,
+              }
+            ),
+            root: results[2],
+            extensions: () => {
+              extensionStack.executionDidEnd();
+              extensionStack.requestDidEnd();
+              return extensionStack.format();
+            }
+          }))
+        )
       );
     }
 
-    if(!global.__proxyExpress) {
-      global.__proxyExpress = express();
-    }
-
-    if(!global.__webtask) {
-      global.__webtask = Webtask.fromExpress(global.__server);
-    }
+    var proxyExpress = express();
+    var webtask = Webtask.fromExpress(server);
 
     module.exports = function (context, req, res) {
       req.userContext = JSON.parse(
@@ -166,22 +189,22 @@ export const RUNNER_WRAPPER = (code: string) =>
       }, {});
 
       if (req.userContext.APOLLO_ENGINE_KEY) {
-        if(!global.__engine) {
-          global.__engine = new ApolloEngine({
+        if(!global.engine) {
+          global.engine = new ApolloEngine({
             apiKey: req.userContext.APOLLO_ENGINE_KEY,
           });
 
-          global.__engine.listen({
+          global.engine.listen({
             graphqlPaths: ['/'],
-            expressApp: global.__server,
-            port: 0,
+            expressApp: server,
+            port: 3000,
             innerHost: '127.0.0.1'
           }, () => {
-            global.__proxyExpress.use((req, res, next) => {
+            proxyExpress.use((req, res, next) => {
               req.pipe(process.stdout);
 
               var proxyRes = req.pipe(request({
-                uri: global.__engine.engineListeningAddress.url,
+                uri: global.engine.engineListeningAddress.url,
                 forever: true,
                 headers: {
                   'usercontext': JSON.stringify(req.userContext),
@@ -198,14 +221,14 @@ export const RUNNER_WRAPPER = (code: string) =>
               proxyRes.pipe(res);
             });
 
-            global.__webtask = Webtask.fromExpress(global.__proxyExpress);
-            global.__webtask(context, req, res);
+            webtask = Webtask.fromExpress(proxyExpress);
+            webtask(context, req, res);
           });
         } else {
-          global.__webtask(context, req, res);
+          webtask(context, req, res);
         }
       } else {
-        global.__webtask(context, req, res);
+        webtask(context, req, res);
       }
     }
   })();

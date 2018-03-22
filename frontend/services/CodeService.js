@@ -70,17 +70,12 @@ export async function getCodeCompiler() {
         ],
       });
       const { code: compiledCode, metadata } = transform;
-
-      console.log(compiledCode)
-      const auth0_moduel_hacked_code = compiledCode.replace('require(\'graphql-tools\')', 'require(\'launchpad-module\').graphqlTools')
-      console.log(auth0_moduel_hacked_codecompiledCode)
-
       const dependencies: Array<string> = metadata.modules.imports.map(
         module => module.source,
       );
       return {
         ok: true,
-        code: auth0_moduel_hacked_code,
+        code: compiledCode,
         dependencies,
       };
     } catch (e) {
