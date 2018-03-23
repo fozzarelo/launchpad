@@ -45,7 +45,7 @@ Help Launchpad by creating more pads! Examples of the pads are available
 
 ## Architecture
 
-For an overview of how Apollo Launchpad is built, check out the [post detailing the original effort](https://dev-blog.apollodata.com/introducing-launchpad-the-graphql-server-demo-platform-cc4e7481fcba). This is a visualization of that effort:
+For an overview of how Apollo Launchpad is built, check out the [post detailing the original effort](https://dev-blog.apollodata.com/how-we-built-launchpad-cb09cbf39ab6). This is a visualization of that effort:
 
 ![Launchpad Architecture](./docs/img/architecture.png)
 
