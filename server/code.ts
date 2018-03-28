@@ -130,7 +130,11 @@ export const RUNNER_WRAPPER = (code: string) =>
       global.__server.use(
         '/',
         (req, res, next) => {
-          req.userContext = req.headers['usercontext'] || {};
+          try{
+            req.userContext = JSON.parse(req.headers['usercontext']) || {};
+          } catch (e){
+            req.userContext = {};
+          }
           if (!schema) {
             schema = schemaFunction(req.userContext);
           }
