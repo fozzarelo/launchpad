@@ -60,18 +60,15 @@ exports[`Footer renders draft 1`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >
@@ -134,18 +131,15 @@ exports[`Footer renders draft 2`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >
@@ -230,18 +224,15 @@ exports[`Footer renders error 1`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >
@@ -314,18 +305,15 @@ exports[`Footer renders error 2`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >
@@ -410,18 +398,15 @@ exports[`Footer renders error 3`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >
@@ -496,18 +481,15 @@ exports[`Footer renders normal 1`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >
@@ -582,18 +564,15 @@ exports[`Footer renders normal 2`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >
@@ -666,18 +645,15 @@ exports[`Footer renders undeployed 1`] = `
   <div
     className="Footer-Right"
   >
-    <div
+    <a
       className="footer-button"
+      href="https://github.com/apollographql/launchpad/"
     >
       <span
         className="icon-book"
       />
-      <a
-        href="https://github.com/apollographql/awesome-launchpad/"
-      >
-        Docs
-      </a>
-    </div>
+      Docs
+    </a>
     <div
       className="powered-by"
     >

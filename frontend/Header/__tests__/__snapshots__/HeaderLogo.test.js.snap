@@ -1,26 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Header Logo renders normal 1`] = `
-<div
+<a
   className="HeaderLogo"
+  href="/new"
 >
-  <a
-    href="https://www.launchpad.graphql.com/new"
-  >
-    <img
-      alt="Apollo Logo"
-      className="Logo"
-      src="icon-apollo-white.small.svg"
-    />
-  </a>
-  <a
-    href="/new"
-  >
-    <img
-      alt="Apollo Launchpad"
-      className="Subbrand"
-      src="logo-apollo-white-subbrand-launchpad.svg"
-    />
-  </a>
-</div>
+  <img
+    alt="Apollo Logo"
+    className="Logo"
+    src="icon-apollo-white.small.svg"
+  />
+  <img
+    alt="Apollo Launchpad"
+    className="Subbrand"
+    src="logo-apollo-white-subbrand-launchpad.svg"
+  />
+</a>
 `;

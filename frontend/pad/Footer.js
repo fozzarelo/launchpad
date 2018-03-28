@@ -124,12 +124,13 @@ export default class Footer extends React.Component {
         {this.renderError()}
 
         <div className="Footer-Right">
-          <div className="footer-button">
+          <a
+            href="https://github.com/apollographql/launchpad/"
+            className="footer-button"
+          >
             <span className="icon-book" />
-            <a href="https://github.com/apollographql/awesome-launchpad/">
-              Docs
-            </a>
-          </div>
+            Docs
+          </a>
           <div className="powered-by">
             <span>Powered by</span>
             <a href="https://auth0.com/extend/developers">
