@@ -1,8 +1,8 @@
 /* @flow */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import type {Pad, Context} from '../types';
+import type { Pad, Context } from '../types';
 import HeaderButton from './HeaderButton';
 
 type EngineConnectorProps = {|
@@ -14,8 +14,8 @@ type EngineConnectorProps = {|
 
 type EngineConnectorState = {|
   data: {
-    me: ?{id: string},
-    service: ?{id: string, apiKeys: Array<{token: string}>},
+    me: ?{ id: string },
+    service: ?{ id: string, apiKeys: Array<{ token: string }> },
   },
   loading: boolean,
 |};
@@ -55,7 +55,7 @@ export default class EngineConnector extends Component<
     });
     this.subscription = observable.subscribe({
       next: next => {
-        this.setState({data: next.data, loading: next.loading});
+        this.setState({ data: next.data, loading: next.loading });
       },
     });
   }
@@ -88,7 +88,7 @@ export default class EngineConnector extends Component<
       });
 
       const newContext = this.props.currentContext.filter(
-        ({key}) => key !== 'APOLLO_ENGINE_KEY',
+        ({ key }) => key !== 'APOLLO_ENGINE_KEY',
       );
       newContext.push({
         key: 'APOLLO_ENGINE_KEY',
