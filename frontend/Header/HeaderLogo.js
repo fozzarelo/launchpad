@@ -8,7 +8,7 @@ export default class HeaderLogo extends Component {
   render() {
     return (
       <div className="HeaderLogo">
-        <a href="https://www.apollodata.com/">
+        <a href="https://www.launchpad.graphql.com/new">
           <img className="Logo" src={apolloLogo} alt="Apollo Logo" />
         </a>
         <a href="/new">

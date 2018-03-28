@@ -5,7 +5,7 @@ exports[`Header Logo renders normal 1`] = `
   className="HeaderLogo"
 >
   <a
-    href="https://www.apollodata.com/"
+    href="https://www.launchpad.graphql.com/new"
   >
     <img
       alt="Apollo Logo"
