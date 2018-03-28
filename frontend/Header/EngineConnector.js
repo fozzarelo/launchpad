@@ -117,8 +117,8 @@ export default class EngineConnector extends Component<
       );
     } else {
       const enginePrefix = process.env.ENGINE_STAGING
-        ? 'https://engine-staging.apollodata.com'
-        : 'https://engine.apollodata.com';
+        ? 'https://engine-staging.apollographql.com'
+        : 'https://engine.apollographql.com';
       const engineUrl = `${enginePrefix}/service/${this.state.data.service.id}`;
       return (
         <HeaderButton onClick={() => window.open(engineUrl, '_blank')}>
@@ -134,6 +134,7 @@ export default class EngineConnector extends Component<
       !this.state.data ||
       this.state.loading ||
       !this.props.pad.user ||
+      !this.props.user.id ||
       this.props.pad.user.id !== this.props.user.id
     ) {
       return null;
