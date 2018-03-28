@@ -96,7 +96,7 @@
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.0.0",
     "postcss-loader": "2.0.5",
-    "prettier": "^1.7.4",
+    "prettier": "^1.11.1",
     "prettier-check": "^1.0.0",
     "promise": "7.1.1",
     "react-dev-utils": "^3.0.0",
@@ -131,6 +131,9 @@
     "heroku-postbuild": "npm run build-server"
   },
   "jest": {
-    "projects": ["<rootDir>/frontend", "<rootDir>/server"]
+    "projects": [
+      "<rootDir>/frontend",
+      "<rootDir>/server"
+    ]
   }
 }
