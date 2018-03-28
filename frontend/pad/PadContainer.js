@@ -532,19 +532,21 @@ const deleteDraftMutation = gql`
 
 const updateMetadataMutation = gql`
   mutation UpdateDefaultQuery(
-    $id: ID!,
-    $defaultQuery: String,
-    $defaultVariables: String,
-    $title: String,
+    $id: ID!
+    $defaultQuery: String
+    $defaultVariables: String
+    $title: String
     $description: String
   ) {
-    pad: updatePadMetadata(input: {
-      id: $id,
-      defaultQuery: $defaultQuery,
-      title: $title,
-      description: $description
-      defaultVariables: $defaultVariables,
-    }) {
+    pad: updatePadMetadata(
+      input: {
+        id: $id
+        defaultQuery: $defaultQuery
+        title: $title
+        description: $description
+        defaultVariables: $defaultVariables
+      }
+    ) {
       ...PadFullFragment
     }
   }

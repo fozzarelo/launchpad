@@ -74,9 +74,9 @@ function makeDownloader({
     const checkSecretsCode = padContext
       .map(
         el =>
-          `if (typeof process.env.${el.key} === 'undefined') {\n  ${printMissingSecretWarning(
-            el.key,
-          )}\n}`,
+          `if (typeof process.env.${
+            el.key
+          } === 'undefined') {\n  ${printMissingSecretWarning(el.key)}\n}`,
       )
       .join('\n');
 

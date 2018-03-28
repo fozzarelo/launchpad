@@ -1,10 +1,10 @@
 /* @flow */
 
-import React, {Component} from 'react';
-import {ApolloProvider} from 'react-apollo';
+import React, { Component } from 'react';
+import { ApolloProvider } from 'react-apollo';
 import ApolloClient from 'apollo-boost';
-import {BrowserRouter} from 'react-router-dom';
-import {Route, Switch, Redirect} from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router';
 import PadContainer from './pad/PadContainer';
 import ListContainer from './list/ListContainer';
 
@@ -65,7 +65,7 @@ export default class App extends Component {
               <PadContainer engineClient={engineApolloClient} />
             </Route>
             <Route path="/:id">
-              {({match}) =>
+              {({ match }) =>
                 match.params.id.length < 8 ||
                 !match.params.id.match('^[a-zA-Z0-9_]*$') ? (
                   <Redirect to={'/new'} />

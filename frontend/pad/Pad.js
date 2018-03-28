@@ -219,12 +219,14 @@ export default class Pad extends Component {
         onLogout={this.props.onLogout}
         onSetTitle={title => this.handleUpdateMetadata({ title })}
         onSetDescription={description =>
-          this.handleUpdateMetadata({ description })}
+          this.handleUpdateMetadata({ description })
+        }
         onSetDefaultQuery={(defaultQuery, defaultVariables) =>
           this.handleUpdateMetadata({
             defaultQuery,
             defaultVariables,
-          })}
+          })
+        }
       />
     );
   }
