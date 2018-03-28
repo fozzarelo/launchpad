@@ -1,8 +1,8 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import gql from 'graphql-tag';
-import type { Pad, Context } from '../types';
+import type {Pad, Context} from '../types';
 import HeaderButton from './HeaderButton';
 
 type EngineConnectorProps = {|
@@ -14,8 +14,8 @@ type EngineConnectorProps = {|
 
 type EngineConnectorState = {|
   data: {
-    me: ?{ id: string },
-    service: ?{ id: string, apiKeys: Array<{ token: string }> },
+    me: ?{id: string},
+    service: ?{id: string, apiKeys: Array<{token: string}>},
   },
   loading: boolean,
 |};
@@ -55,7 +55,7 @@ export default class EngineConnector extends Component<
     });
     this.subscription = observable.subscribe({
       next: next => {
-        this.setState({ data: next.data, loading: next.loading });
+        this.setState({data: next.data, loading: next.loading});
       },
     });
   }
@@ -88,7 +88,7 @@ export default class EngineConnector extends Component<
       });
 
       const newContext = this.props.currentContext.filter(
-        ({ key }) => key !== 'APOLLO_ENGINE_KEY',
+        ({key}) => key !== 'APOLLO_ENGINE_KEY',
       );
       newContext.push({
         key: 'APOLLO_ENGINE_KEY',
@@ -100,8 +100,10 @@ export default class EngineConnector extends Component<
 
   renderInner() {
     if (this.state.data.me == null) {
-      const loginUrl = `https://engine-graphql.apollodata.com/login?cb=${document
-        .location.href}`;
+      const engineGraphQLUrl = process.env.ENGINE_STAGING
+        ? 'https://engine-staging-graphql.apollodata.com'
+        : 'https://engine-graphql.apollodata.com';
+      const loginUrl = `${engineGraphQLUrl}/login?cb=${document.location.href}`;
       return (
         <HeaderButton onClick={() => (document.location.href = loginUrl)}>
           Login to Apollo Engine
@@ -114,8 +116,10 @@ export default class EngineConnector extends Component<
         </HeaderButton>
       );
     } else {
-      const engineUrl = `https://engine.apollographql.com/service/${this.state
-        .data.service.id}`;
+      const enginePrefix = process.env.ENGINE_STAGING
+        ? 'https://engine-staging.apollodata.com'
+        : 'https://engine.apollodata.com';
+      const engineUrl = `${enginePrefix}/service/${this.state.data.service.id}`;
       return (
         <HeaderButton onClick={() => window.open(engineUrl, '_blank')}>
           View in Apollo Engine

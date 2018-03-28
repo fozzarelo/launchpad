@@ -69,6 +69,9 @@ can also copy `.env.staging.template` to your `.env`):
 REACT_APP_LAUNCHPAD_API_URL=https://launchpad-api-staged.herokuapp.com/
 REACT_APP_AUTH0_DOMAIN=meteor.auth0.com
 REACT_APP_AUTH0_CLIENT_ID=kUtxJjyapGN72Rs7tt5jXMgQ7axDgJLa
+
+#If you want to use engine staging
+#ENGINE_STAGING=""
 ```
 
 Then the client can be run locally:

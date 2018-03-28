@@ -1,10 +1,10 @@
 /* @flow */
 
-import React, { Component } from 'react';
-import { ApolloProvider } from 'react-apollo';
+import React, {Component} from 'react';
+import {ApolloProvider} from 'react-apollo';
 import ApolloClient from 'apollo-boost';
-import { BrowserRouter } from 'react-router-dom';
-import { Route, Switch, Redirect } from 'react-router';
+import {BrowserRouter} from 'react-router-dom';
+import {Route, Switch, Redirect} from 'react-router';
 import PadContainer from './pad/PadContainer';
 import ListContainer from './list/ListContainer';
 
@@ -21,8 +21,11 @@ const apolloClient = new ApolloClient({
   },
 });
 
+//staging url:
 const engineApolloClient = new ApolloClient({
-  uri: 'https://engine-graphql.apollodata.com/api/graphql',
+  uri: process.env.ENGINE_STAGING
+    ? 'https://engine-staging-graphql.apollodata.com/api/graphql'
+    : 'https://engine-graphql.apollodata.com/api/graphql',
   request: operation => {
     operation.setContext({
       credentials: 'include',
@@ -62,7 +65,7 @@ export default class App extends Component {
               <PadContainer engineClient={engineApolloClient} />
             </Route>
             <Route path="/:id">
-              {({ match }) =>
+              {({match}) =>
                 match.params.id.length < 8 ||
                 !match.params.id.match('^[a-zA-Z0-9_]*$') ? (
                   <Redirect to={'/new'} />
@@ -71,7 +74,8 @@ export default class App extends Component {
                     id={match.params.id}
                     engineClient={engineApolloClient}
                   />
-                )}
+                )
+              }
             </Route>
             <Redirect from="/" to="/new" />
           </Switch>
