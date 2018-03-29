@@ -134,7 +134,7 @@ export default class EngineConnector extends Component<
       !this.state.data ||
       this.state.loading ||
       !this.props.pad.user ||
-      !this.props.user.id ||
+      !this.props.user ||
       this.props.pad.user.id !== this.props.user.id
     ) {
       return null;
