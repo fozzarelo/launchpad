@@ -95,6 +95,7 @@ export default class EngineConnector extends Component<
         value: result.data.newService.apiKeys[0].token,
       });
       this.props.onContextChange(newContext);
+      this.forceUpdate();
     }
   }
 
