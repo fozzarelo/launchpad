@@ -108,7 +108,6 @@ export default class Header extends Component {
       <div className="Header">
         <div className="Header-Left">
           <HeaderLogo />
-
           <div className="Management-Buttons">
             <HeaderButton onClick={() => (document.location.href = `/new`)}>
               New
@@ -117,7 +116,6 @@ export default class Header extends Component {
             {this.renderDownloadButton()}
             {this.renderForkButton()}
           </div>
-
           <TitleEditor
             onSetTitle={this.props.onSetTitle}
             title={this.props.pad.title}
@@ -130,13 +128,29 @@ export default class Header extends Component {
                   this.props.pad.user.id === this.props.user.id),
             )}
           />
-          <EngineConnector
-            engineClient={this.props.engineClient}
-            pad={this.props.pad}
-            user={this.props.user}
-            currentContext={this.props.currentContext}
-            onContextChange={this.props.onContextChange}
-          />
+          {/* TODO remove exception for pugstagram */}
+          {this.props.pad.id === 'nx9zvp49q7' ? (
+            <div className="Header-EngineButtons">
+              <HeaderButton
+                onClick={() =>
+                  window.open(
+                    'https://engine.apollographql.com/service/launchpad_nx9zvp49q7',
+                    '_blank',
+                  )
+                }
+              >
+                View in Apollo Engine
+              </HeaderButton>
+            </div>
+          ) : (
+            <EngineConnector
+              engineClient={this.props.engineClient}
+              pad={this.props.pad}
+              user={this.props.user}
+              currentContext={this.props.currentContext}
+              onContextChange={this.props.onContextChange}
+            />
+          )}
         </div>
         <div className="Header-Gap" />
         <div className="Header-Right">
