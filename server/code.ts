@@ -143,11 +143,21 @@ export const RUNNER_WRAPPER = (code: string) =>
         },
         bodyParser.json(),
         (req, res, next) => {
-          graphqlExpress({
-            schema: schema,
-            tracing: req.userContext.APOLLO_ENGINE_KEY ? true : false,
-            cacheControl: req.userContext.APOLLO_ENGINE_KEY ? true : false,
-          })(req, res, next)
+          const engineKey = req.userContext.APOLLO_ENGINE_KEY;
+
+          graphqlExpress(req =>
+            Promise.all([
+              Promise.resolve(schema),
+              Promise.resolve(contextFn(req.headers, req.userContext)),
+              Promise.resolve(rootFunction(req.headers, req.userContext))
+            ]).then(results => ({
+              schema: results[0],
+              context: results[1],
+              rootValue: results[2],
+              tracing: engineKey && engineKey !== '' ? true : false,
+              cacheControl: engineKey && engineKey !== '' ? true : false,
+            }))
+          )(req, res, next)
         }
       );
     }
