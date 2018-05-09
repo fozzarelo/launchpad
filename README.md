@@ -131,7 +131,7 @@ To log the information produced by a backing webtask in testing, create a profil
 ```
 npm install wt-cli -g
 wt init -p "lp-test" \
-     --url https://wt-launchpad.it.auth0.com \
+     --url https://launchpad.auth0-extend.com \
      --token $WT_TOKEN \
      --container launchpad-test
 wt logs -p "lp-test"
@@ -150,7 +150,7 @@ AUTH0_SECRET={YOUR AUTH0 SECRET}
 WT_SINGLE_TENANT_CONTAINER=launchpad-staging
 WT_NO_PROXY=true
 WT_TOKEN=eyJhbGciOiJIUzI1NiIsImtpZCI6ImxhdW5jaHBhZC0xIn0.eyJqdGkiOiJiOGQ4OWE2OWUxN2Y0NWNhODIxM2M4ZGVjZDVlYjY4MyIsImlhdCI6MTQ5NzYwMjk0NiwiY2EiOlsiZmYxNDczNDYzNzY5NDNmMWEwN2JkMmQyNDkyYmUzZTkiXSwiZGQiOjIsInRlbiI6ImxhdW5jaHBhZC1zdGFnaW5nIn0.jT31-pdmCG8QyrZnwMYO5Mgi6GUe5D9tfTFT8X1XiBw
-WT_API=https://wt-launchpad.it.auth0.com/api
+WT_API=https://launchpad.auth0-extend.com/api
 ```
 
 Then you can run server

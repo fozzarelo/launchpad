@@ -11,14 +11,14 @@ import {
   PadMetadataInput,
 } from './types';
 
-const STARTER_DEPLOYED_URL = `https://wt-launchpad.it.auth0.com/api/run/launchpad/launchpad-starter-code`;
+const STARTER_DEPLOYED_URL = `https://launchpad.auth0-extend.com/api/run/launchpad/launchpad-starter-code`;
 const ID_GENERATOR = new Hashids(
   'Apollo Launchpad',
   8,
   'bcdfghjklmnpqrstvwxz0123456789',
 );
 
-type UpdateResult = {ok: true, pad: Pad } | { ok: false, reason: string };
+type UpdateResult = { ok: true; pad: Pad } | { ok: false; reason: string };
 
 const PadModel = {
   filter(pad: Pad, context: GraphQLContext): Pad {
@@ -127,7 +127,7 @@ const PadModel = {
     if (user) {
       const pads = await collection
         .find({
-          'user.id': user.id
+          'user.id': user.id,
         })
         .toArray();
       return pads.map(pad => PadModel.filter(pad, context));
@@ -142,10 +142,10 @@ const PadModel = {
     context: GraphQLContext,
   ): Promise<
     | {
-      ok: true,
-      resolvedDependencies: Array<Dependency>,
-    }
-    | { ok: false, reason: string }
+        ok: true;
+        resolvedDependencies: Array<Dependency>;
+      }
+    | { ok: false; reason: string }
   > {
     let resolvedDependencies = await context.webtask.resolveDependencies(
       dependencies,
@@ -179,14 +179,14 @@ const PadModel = {
       context: padContext,
       dependencies,
     }: {
-      id: string,
-      type: 'depl' | 'draft',
-      deployedCode: string,
-      context: Array<Context>,
-      dependencies: Array<Dependency>,
+      id: string;
+      type: 'depl' | 'draft';
+      deployedCode: string;
+      context: Array<Context>;
+      dependencies: Array<Dependency>;
     },
     context: GraphQLContext,
-  ): Promise<{ ok: true, url: string } | { ok: false }> {
+  ): Promise<{ ok: true; url: string } | { ok: false }> {
     const result = await context.webtask.deploy({
       containerId: id,
       name: type,
@@ -208,7 +208,7 @@ const PadModel = {
   async create(
     input: PadInputWithoutId,
     context: GraphQLContext,
-  ): Promise<{ ok: true, pad: Pad } | { ok: false, reason: string }> {
+  ): Promise<{ ok: true; pad: Pad } | { ok: false; reason: string }> {
     const id = await PadModel.generateId(context);
     return PadModel.update(
       {
@@ -280,7 +280,7 @@ const PadModel = {
   // 1. Generate a new ID and new pad object, generate new token
   // 2. If we own the pad being forked, copy the secrets; otherwise, only copy the keys
   // 3. Copy all the rest of the data
-  async fork(id: string, context: GraphQLContext) : Promise<UpdateResult> {
+  async fork(id: string, context: GraphQLContext): Promise<UpdateResult> {
     const pad = await PadModel.getById(id, context);
     const newId = await PadModel.generateId(context);
     const user = await UserModel.me(context);
@@ -321,7 +321,7 @@ const PadModel = {
       dependencies = [],
     }: PadInput,
     context: GraphQLContext,
-  ): Promise<{ ok: true, pad: Pad } | { ok: false, reason: string }> {
+  ): Promise<{ ok: true; pad: Pad } | { ok: false; reason: string }> {
     let pad = await PadModel.getById(id, context);
 
     const user = UserModel.me(context);
@@ -416,7 +416,7 @@ const PadModel = {
   async deleteDraft(
     id: string,
     context: GraphQLContext,
-  ): Promise<{ ok: true, pad: Pad } | { ok: false, reason: string }> {
+  ): Promise<{ ok: true; pad: Pad } | { ok: false; reason: string }> {
     let pad = await PadModel.getById(id, context);
 
     if (!pad) {
@@ -451,7 +451,7 @@ const PadModel = {
   async updatePadMetadata(
     { id, ...input }: PadMetadataInput,
     context: GraphQLContext,
-  ): Promise<{ ok: true, pad: Pad } | { ok: false, reason: string }> {
+  ): Promise<{ ok: true; pad: Pad } | { ok: false; reason: string }> {
     let pad = await PadModel.getById(id, context);
     const user = UserModel.me(context);
 
@@ -494,7 +494,10 @@ const PadModel = {
   },
 };
 
-async function savePad(pad: Pad, context: GraphQLContext): Promise<UpdateResult> {
+async function savePad(
+  pad: Pad,
+  context: GraphQLContext,
+): Promise<UpdateResult> {
   const collection = await context.mongo.pads();
   if (pad.deployedCode) {
     const result = await PadModel.deploy(

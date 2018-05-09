@@ -18,7 +18,7 @@ export default class Logs extends Component {
       height: 200,
       token: this.props.token,
       webtaskName: 'draft',
-      hostUrl: 'https://wt-launchpad.it.auth0.com',
+      hostUrl: 'https://launchpad.auth0-extend.com',
       filter: '^(new|finished)',
       onClose: () => {
         this.props.onClose();

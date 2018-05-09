@@ -5,10 +5,9 @@ import { MongoClient } from 'mongodb';
 import createServer from '../createServer';
 import { createTestDatabaseName } from './utils/testUtils';
 
-const api = 'https://wt-launchpad.it.auth0.com/api';
+const api = 'https://launchpad.auth0-extend.com/api';
 const container = 'launchpad-test';
-const token =
-  'eyJhbGciOiJIUzI1NiIsImtpZCI6ImxhdW5jaHBhZC0xIn0.eyJqdGkiOiIzNzY5MjA2YmY3YjM0YTI1ODRkMzlhOTk2MDdjZGJmNSIsImlhdCI6MTQ5OTI1NjczMSwiZHIiOjEsImNhIjpbImZmMTQ3MzQ2Mzc2OTQzZjFhMDdiZDJkMjQ5MmJlM2U5Il0sImRkIjoyLCJ0ZW4iOiJsYXVuY2hwYWQtdGVzdCJ9.U9XxBHTUIvMw4WnDq-S0ACAq6F9z8-XehFqAfMbwD60';
+const token: string = process.env.WT_TESTING_TOKEN || '';
 const secret =
   'mKVFmMkznAG2L5HXgizAaqCP5HrTtYePwbDDYIhkNJAeYwWHcmH8Wt93S1lwYYQ';
 
@@ -17,7 +16,7 @@ let mongoUrl: string;
 let port: string | number;
 let createdIds: Array<string> = [];
 
-const userToken:string = jwt.sign(
+const userToken: string = jwt.sign(
   {
     sub: 'test-user',
     nickname: 'testUsername',
@@ -25,7 +24,11 @@ const userToken:string = jwt.sign(
   secret,
 );
 
-async function queryServer(query: string, variables: Record<string, any>, token: string) {
+async function queryServer(
+  query: string,
+  variables: Record<string, any>,
+  token: string,
+) {
   const result = await fetch(`http://localhost:${port}`, {
     method: 'POST',
     headers: {
@@ -53,7 +56,7 @@ async function queryHello(url: string) {
   return result.json();
 }
 
-describe("createServer", () => {
+describe('createServer', () => {
   beforeAll(async () => {
     const baseMongoUrl =
       process.env.TEST_MONGODB_URL || 'mongodb://127.0.0.1:27017';
@@ -158,7 +161,7 @@ describe("createServer", () => {
 `;
 
   describe('integration lifecycle test', () => {
-    let padId:string;
+    let padId: string;
     it('get own profile', async () => {
       const result = await queryServer(`query { me { id }}`, {}, '');
       expect(result).toEqual({
