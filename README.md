@@ -43,6 +43,10 @@ Help Launchpad by creating more pads! Examples of the pads are available
 
 [![Launchpad screenshot](screenshot.png)](https://launchpad.graphql.com/1jzxrj179)
 
+## Issues
+
+Secrets don't work in new pads.
+
 ## Architecture
 
 For an overview of how Apollo Launchpad is built, check out the [post detailing the original effort](https://dev-blog.apollodata.com/how-we-built-launchpad-cb09cbf39ab6). This is a visualization of that effort:
